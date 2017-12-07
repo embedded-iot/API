@@ -1,6 +1,0 @@
-chinh sua lan 3
-hoc git rebase
-master change
-dev1 change
-dev2 change
-sdasd
