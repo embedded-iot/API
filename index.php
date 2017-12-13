@@ -16,7 +16,7 @@
   // check admin
   if (isAdmin($UseName, $code)){
     
-    show("Admin account");
+    shoow("Admin account");
     checkCreateUse();
     exit();
   }else {
@@ -61,7 +61,11 @@
         return 6;
       else if (strcmp($action, "downloadDayOfMonth") == 0)
         return 7;
-        
+      else if (strcmp($action, "getInforAccount") == 0)
+        return 8;
+      else if (strcmp($action, "getCurrentData") == 0)
+        return 9;
+      
     }
     return -1;
   }
@@ -75,6 +79,8 @@
       case 5: getDataOfFile(); break;
       case 6: downloadMonthOfYear(); break;
       case 7: downloadDayOfMonth(); break;
+      case 8: getInforAccount(); break;
+      case 9: getCurrentData(); break;
       
     }
   }
@@ -191,7 +197,75 @@
     } else echo "False";
   }
   
+  function getInforAccount(){
+    GLOBAL $UseName, $code;
+    $path = "data/account.txt";
+    if (isNameFile($path)){
+      if (strlen(dataFile1($path)) > 5)
+      {
+        $jsonTest = '['.dataFile1($path).']';
+        
+      }
+      else  $jsonTest = '[]';
+      show($jsonTest);
+      // echo json_decode($jsonTest);
+      // echo $jsonTest ; 
+      $book2 = json_decode($jsonTest);
+      //echo convertArrayToJson($books1);
+      //echo $book2;
+      $inforAccount;
+      $index = 0;
+      for ($index = 0; $index < count($book2); $index++)
+      {
+        $item = $book2[$index];
+        if (strcmp($UseName, $item->UseName) == 0 && strcmp($code, $item->code) == 0) {
+          $inforAccount = $item;
+          echo convertArrayToJson($inforAccount) ;
+          exit();
+        }
+      }
+      $inforAccount = json_decode('{}');
+      echo convertArrayToJson($inforAccount) ;
+    }
+  }
+  
+  function getCurrentData(){
+    GLOBAL $UseName, $code;
+    if ( isset($_REQUEST['Year']) && isset($_REQUEST['Month']) && isset($_REQUEST['Day']) ) {
+      $Year = $_REQUEST['Year'];
+      $Month = $_REQUEST['Month'];      
+      $Day = $_REQUEST['Day'];      
+      $NameFile = $Day."_".$Month."_".$Year.".txt";      
+      
+      $path = "data/". $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day."/".$NameFile;
+    
+      if (isNameFile($path)){
 
+        //$books1 = json_decode(dataFile1($path));
+       
+        $jsonTest ='';
+        if (strlen(dataFile1($path)) > 5)
+        {
+          $jsonTest = '['.dataFile1($path).']';
+        }
+        else  $jsonTest = '[]';
+        // echo json_decode($jsonTest);
+       // echo $jsonTest ; 
+        $book2 = json_decode($jsonTest);
+        //echo convertArrayToJson($books1);
+        $len = count($book2);
+        if ($len  > 0) {
+          echo convertArrayToJson($book2[$len-1]);
+          exit();
+        }
+        $inforAccount = json_decode('{}');
+        echo convertArrayToJson($inforAccount) ;
+      }else {
+        $inforAccount = json_decode('{}');
+        echo convertArrayToJson($inforAccount) ;
+      }
+    } else echo "False";
+  }
 
   
  
