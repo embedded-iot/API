@@ -22,12 +22,14 @@
     return date($format);
   }
 
-  function InitData($useName, $code){
+  function InitData($model, $useName, $code){
     GLOBAL $createFile, $createFolder, $path, $Year, $Month, $Day;
-    $createFolder= 'data/'.$useName.'_'.$code.'/'.$Year.'/'.$Month.'/'.$Day;
+    $createFolder= $model.$useName.'_'.$code.'/'.$Year.'/'.$Month.'/'.$Day;
     $path = $createFolder.'/'.$createFile;
     createFolder($createFolder);
     createFile($path);
+    show($useName);
+    show($code);
     show("Create new file");
   }
 

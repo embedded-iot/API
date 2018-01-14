@@ -33,7 +33,10 @@
 
  function getDirectories($path)
  {
-     $directories = [];
+		$directories = [];
+		if (!isNameFolder($path)) {
+			return $directories;
+		}
      $items = scandir($path);
      foreach ($items as $item) {
          if($item == '..' || $item == '.')

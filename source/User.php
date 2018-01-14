@@ -4,8 +4,8 @@
   $Admincode ="12345678";
 
 
-  function isLogin($UseName, $code){
-    if (isNameFolder("data/".$UseName."_".$code))
+  function isLogin($model, $UseName, $code){
+    if (isNameFolder($model.$UseName."_".$code))
       return true;
     return false;
   }
@@ -18,11 +18,11 @@
     return false;
   }
 
-  function createUse($UseName, $code){
-    if (!isNameFolder("data/".$UseName."_".$code))
-      createFolder("data/".$UseName."_".$code);
-
+  function createUse($model, $UseName, $code){
+    if (!isNameFolder($model.$UseName."_".$code)) {
+      createFolder($model.$UseName."_".$code);
+    }
   }
-  
+
 
   
