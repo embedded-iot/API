@@ -9,14 +9,23 @@
   $UseName = "";
   $code = "";
   $idAction = -1;
+  $Model = "Test/";
 
 
   /* Function MAIN*/
   getUse();
+
+  if (isset($_REQUEST['Model'])) {
+    $md = $_GET['Model'];
+    if (strcmp($md, "Inventer") == 0) {
+      $Model = "Inventer/";
+    }
+  }
+  show($Model);
   // check admin
   if (isAdmin($UseName, $code)){
     
-    shoow("Admin account");
+    show("Admin account");
     checkCreateUse();
     exit();
   }else {
@@ -86,73 +95,74 @@
   }
 
   function checkCreateUse(){
+    GLOBAL $Model;
     $createUseName = "";
     $createcode = "";
     if (isset($_REQUEST['createUseName'])  && isset($_REQUEST['createcode'])){
       $createUseName = $_REQUEST['createUseName'];
       $createcode = $_REQUEST['createcode'];
-      InitData($createUseName, $createcode);
+      InitData($Model, $createUseName, $createcode);
       echo "OK";
     }
   }
 
   function ischeckLogin(){
-    GLOBAL $UseName, $code;
-    if (isLogin($UseName, $code)){
-      InitData($UseName, $code);
+    GLOBAL $UseName, $code, $Model;
+    if (isLogin($Model, $UseName, $code)){
+      InitData($Model, $UseName, $code);
       echo 'true' ;
     }else echo 'false' ;
   }
   
   function  getYearOfUser(){
-    GLOBAL $UseName, $code;
-    $path = "data/". $UseName."_".$code;
+    GLOBAL $UseName, $code, $Model;
+    $path = $Model. $UseName."_".$code;
     echo convertArrayToJson(getDirectories($path)) ;
   }
 
   function  getMonthOfYear(){
-    GLOBAL $UseName, $code;
+    GLOBAL $UseName, $code, $Model;
     if (isset($_REQUEST['Year'])){
       $Year = $_REQUEST['Year'];
-      $path = "data/". $UseName."_".$code.'/'.$Year;
+      $path = $Model. $UseName."_".$code.'/'.$Year;
       echo convertArrayToJson(getDirectories($path)) ;
     }
     else echo "False";
   }
 
   function  getDayOfMonth(){
-    GLOBAL $UseName, $code;
+    GLOBAL $UseName, $code, $Model;
     if (isset($_REQUEST['Year']) && isset($_REQUEST['Month'])){
       $Year = $_REQUEST['Year'];
       $Month = $_REQUEST['Month'];      
-      $path = "data/". $UseName."_".$code.'/'.$Year.'/'.$Month;
+      $path = $Model. $UseName."_".$code.'/'.$Year.'/'.$Month;
       echo convertArrayToJson(getDirectories($path)) ;
     } else echo "False";
   }
   
   function  getFileOfDay(){
-    GLOBAL $UseName, $code;
+    GLOBAL $UseName, $code, $Model;
     if (isset($_REQUEST['Year']) && isset($_REQUEST['Month']) && $_REQUEST['Day']){
       $Year = $_REQUEST['Year'];
       $Month = $_REQUEST['Month'];      
       $Day = $_REQUEST['Day'];      
       
-      $path = "data/". $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day;
+      $path = $Model.$UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day;
       if (isNameFolder($path)){
         echo convertArrayToJson(getFile($path)) ;
-      }
+      } else echo "[]"; 
     } else echo "False";
   }
 
   function  getDataOfFile(){
-    GLOBAL $UseName, $code;
+    GLOBAL $UseName, $code, $Model;
     if ( isset($_REQUEST['Year']) && isset($_REQUEST['Month']) && isset($_REQUEST['Day']) ) {
       $Year = $_REQUEST['Year'];
       $Month = $_REQUEST['Month'];      
       $Day = $_REQUEST['Day'];      
       $NameFile = $Day."_".$Month."_".$Year.".txt";      
       
-      $path = "data/". $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day."/".$NameFile;
+      $path = $Model. $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day."/".$NameFile;
     
       if (isNameFile($path)){
 
@@ -171,40 +181,40 @@
         $book2 = json_decode($jsonTest);
         //echo convertArrayToJson($books1);
         echo convertArrayToJson($book2) ;
-      }
+      } else echo "[]";
     } else echo "False";
   }
   function downloadMonthOfYear(){
-    GLOBAL $UseName, $code;
+    GLOBAL $UseName, $code, $Model;
     if (isset($_REQUEST['Year']) && isset($_REQUEST['Month'])){
       $Year = $_REQUEST['Year'];
       $Month = $_REQUEST['Month'];      
      
-      $path = "data/". $UseName."_".$code.'/'.$Year.'/'.$Month.'/';
+      $path = $Model.$UseName."_".$code.'/'.$Year.'/'.$Month.'/';
       downloadZipperFolder($path);
     } else echo "False";
   }
   function downloadDayOfMonth(){
-    GLOBAL $UseName, $code;
+    GLOBAL $UseName, $code, $Model;
     if (isset($_REQUEST['Year']) && isset($_REQUEST['Month']) && $_REQUEST['Day']){
       $Year = $_REQUEST['Year'];
       $Month = $_REQUEST['Month'];      
       $Day = $_REQUEST['Day'];      
       
-      $path = "data/". $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day.'/'.$Day.'_'.$Month.'_'.$Year.'.txt';
+      $path = $Model. $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day.'/'.$Day.'_'.$Month.'_'.$Year.'.txt';
       show($path);
       downloadFile($path);
     } else echo "False";
   }
   
   function getInforAccount(){
-    GLOBAL $UseName, $code;
-    $path = "data/account.txt";
+    GLOBAL $UseName, $code, $Model;
+    $path = $Model."account.txt";
     if (isNameFile($path)){
       if (strlen(dataFile1($path)) > 5)
       {
         $jsonTest = '['.dataFile1($path).']';
-        
+
       }
       else  $jsonTest = '[]';
       show($jsonTest);
@@ -226,18 +236,21 @@
       }
       $inforAccount = json_decode('{}');
       echo convertArrayToJson($inforAccount) ;
+    } else {
+      $inforAccount = json_decode('{}');
+      echo convertArrayToJson($inforAccount) ;
     }
   }
   
   function getCurrentData(){
-    GLOBAL $UseName, $code;
+    GLOBAL $UseName, $code, $Model;
     if ( isset($_REQUEST['Year']) && isset($_REQUEST['Month']) && isset($_REQUEST['Day']) ) {
       $Year = $_REQUEST['Year'];
       $Month = $_REQUEST['Month'];      
       $Day = $_REQUEST['Day'];      
       $NameFile = $Day."_".$Month."_".$Year.".txt";      
       
-      $path = "data/". $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day."/".$NameFile;
+      $path = $Model. $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day."/".$NameFile;
     
       if (isNameFile($path)){
 
