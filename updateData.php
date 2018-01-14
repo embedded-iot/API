@@ -19,10 +19,11 @@
 
     $Date = "";
     $Time = "";
-    $Temperature = "";
-    $Radiant = "";
+		$Data = "";
+		$Model = "Test/";
     $UseName = "";
-    $code = "";
+		$code = "";
+		
 
     //Example : dateTimeNow = 'd/m/Y-H:i:s'
     if (isset($_GET["dateTimeNow"])) {
@@ -31,11 +32,18 @@
        exit();
     }
 
+    if (isset($_REQUEST['Model'])) {
+			$md = $_REQUEST['Model'];
+			if (strcmp($md, "Inventer") == 0) {
+				$Model = "Inventer/";
+			}
+    }
+    
     // Main code
     if (login())
     {
         show("Login success!");
-        InitData($UseName, $code);
+        InitData($Model, $UseName, $code);
         
         getData();
         writeData();
@@ -45,42 +53,38 @@
     
 
     function login(){
-        GLOBAL $UseName, $code;
-        if (isset($_GET["UseName"]) && isset($_GET["code"])){
-            $UseName =$_GET["UseName"];
-            $code =$_GET["code"];     
-            show($UseName);
-            show($code);
-        }
-        return isLogin($UseName, $code);
-       
+			GLOBAL $UseName, $code, $Model;
+			if (isset($_GET["UseName"]) && isset($_GET["code"])){
+					$UseName =$_GET["UseName"];
+					$code =$_GET["code"];     
+					show($UseName);
+					show($code);
+			}
+			return isLogin($Model , $UseName, $code);
     }
     
     function getData()
     {
-        GLOBAL $Date,$Time,$Temperature,$Radiant;
-        if (isset($_GET["Date"]))
-           $Date =$_GET["Date"];
-        if (isset($_GET["Time"]))
-           $Time =$_GET["Time"];
-        if (isset($_GET["Temperature"]))
-           $Temperature =$_GET["Temperature"];
-        if (isset($_GET["Radiant"]))
-           $Radiant =$_GET["Radiant"]; 
-        show($Date);
+        GLOBAL $Date,$Time,$Data;
+					$Date =getDateTimeNow("d-m-Y");
+					$Time =getDateTimeNow("H:i:s");
+        if (isset($_GET["Data"]))
+					$Data =$_GET["Data"];
+				show($Date );
         show($Time);
-        show($Temperature);
-        show($Radiant);
+        show($Data);
+				
     }
     function formatString(){
-        GLOBAL $UseName, $code, $Date, $Time, $Temperature, $Radiant; 
-        $data="{\"Date\":\"".$Date."\",\"Time\":\"".$Time."\",\"Temperature\":\"".$Temperature."\",\"Radiant\":\"".$Radiant."\",\"UseName\":\"".$UseName."\",\"code\":\"".$code."\"},";
-        return $data;
+        GLOBAL $UseName, $code, $Date, $Time, $Data;
+        $strData="{\"Date\":\"".$Date."\",\"Time\":\"".$Time."\",".$Data.",\"UseName\":\"".$UseName."\",\"code\":\"".$code."\"},";
+				show($strData);
+				return $strData;
     }
     function writeData(){
         $str = formatString();
         $path = getPathFile();
-        if (isNameFile($path) && strlen($str) > 80){
+        if (isNameFile($path)){
             writeLine($path,$str);
             show("Write".$str);
         }else show("Write not success!");
