@@ -20,7 +20,7 @@
     $Date = "";
     $Time = "";
 		$Data = "";
-		$Model = "Test/";
+		$Model = "/Default";
     $UseName = "";
 		$code = "";
 		
@@ -33,10 +33,7 @@
     }
 
     if (isset($_REQUEST['Model'])) {
-			$md = $_REQUEST['Model'];
-			if (strcmp($md, "Inventer") == 0) {
-				$Model = "Inventer/";
-			}
+			$Model = $_REQUEST['Model'];
     }
     
     // Main code
@@ -44,7 +41,7 @@
     {
         show("Login success!");
         InitData($Model, $UseName, $code);
-        
+
         getData();
         writeData();
         echo "OK";
@@ -60,7 +57,7 @@
 					show($UseName);
 					show($code);
 			}
-			return isLogin($Model , $UseName, $code);
+			return isLogin("" , $UseName, $code);
     }
     
     function getData()

@@ -5,7 +5,7 @@
 
 
   function isLogin($model, $UseName, $code){
-    if (isNameFolder($model.$UseName."_".$code))
+    if (isNameFolder('Data/'.$UseName."_".$code.$model))
       return true;
     return false;
   }
@@ -19,8 +19,8 @@
   }
 
   function createUse($model, $UseName, $code){
-    if (!isNameFolder($model.$UseName."_".$code)) {
-      createFolder($model.$UseName."_".$code);
+    if (!isNameFolder('Data/'.$UseName."_".$code.$model)) {
+      createFolder('Data/'.$UseName."_".$code.$model);
     }
   }
 

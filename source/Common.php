@@ -24,7 +24,7 @@
 
   function InitData($model, $useName, $code){
     GLOBAL $createFile, $createFolder, $path, $Year, $Month, $Day;
-    $createFolder= $model.$useName.'_'.$code.'/'.$Year.'/'.$Month.'/'.$Day;
+    $createFolder= 'Data/'.$useName.'_'.$code.$model.'/'.$Year.'/'.$Month.'/'.$Day;
     $path = $createFolder.'/'.$createFile;
     createFolder($createFolder);
     createFile($path);

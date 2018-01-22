@@ -16,7 +16,7 @@
 
             $UseName ="Den";
             $code = "1321060356";
-            $folder =  $UseName."_".$code;
+            $folder =  'Data/'.$UseName."_".$code;
 
             function view(){
                 GLOBAL $folder, $UseName, $code;

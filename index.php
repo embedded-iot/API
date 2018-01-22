@@ -9,17 +9,14 @@
   $UseName = "";
   $code = "";
   $idAction = -1;
-  $Model = "Test/";
+  $Model = "/Default";
 
 
   /* Function MAIN*/
   getUse();
 
   if (isset($_REQUEST['Model'])) {
-    $md = $_GET['Model'];
-    if (strcmp($md, "Inventer") == 0) {
-      $Model = "Inventer/";
-    }
+    $Model = $_GET['Model'];
   }
   show($Model);
   // check admin
@@ -101,11 +98,29 @@
     if (isset($_REQUEST['createUseName'])  && isset($_REQUEST['createcode'])){
       $createUseName = $_REQUEST['createUseName'];
       $createcode = $_REQUEST['createcode'];
+      $createlat = "21.035884";
+      $createlong = "105.787637";
+      if (isset($_REQUEST['createlat'])  && isset($_REQUEST['createlong'])){
+        $createlat = $_REQUEST['createlat'];
+        $createlong = $_REQUEST['createlong'];        
+      }
+      if (isLogin("", $UseName, $code) == false) {
+        InitInforAccount($createUseName, $createcode, $createlat, $createlong);
+      }
       InitData($Model, $createUseName, $createcode);
+      
       echo "OK";
     }
   }
-
+  
+  function InitInforAccount($createUseName, $createcode, $createlat, $createlong) {
+    $info = "{\"UseName\" : \"".createUseName."\", \"code\": \"".$createcode."\", \"lat\": \"".$createlat."\", \"long\" : \"".$createlong."\"},";
+    $path = "Data/account.txt";
+    if (isNameFile($path)){
+        writeLine($path,$info);
+        show("Write:".$info." \nTo:".$path);
+    }else show("Write not success!");
+  }
   function ischeckLogin(){
     GLOBAL $UseName, $code, $Model;
     if (isLogin($Model, $UseName, $code)){
@@ -116,7 +131,7 @@
   
   function  getYearOfUser(){
     GLOBAL $UseName, $code, $Model;
-    $path = $Model. $UseName."_".$code;
+    $path = 'Data/'.$UseName."_".$code.$Model;
     echo convertArrayToJson(getDirectories($path)) ;
   }
 
@@ -124,7 +139,7 @@
     GLOBAL $UseName, $code, $Model;
     if (isset($_REQUEST['Year'])){
       $Year = $_REQUEST['Year'];
-      $path = $Model. $UseName."_".$code.'/'.$Year;
+      $path = 'Data/'.$UseName."_".$code.$Model.'/'.$Year;
       echo convertArrayToJson(getDirectories($path)) ;
     }
     else echo "False";
@@ -135,7 +150,7 @@
     if (isset($_REQUEST['Year']) && isset($_REQUEST['Month'])){
       $Year = $_REQUEST['Year'];
       $Month = $_REQUEST['Month'];      
-      $path = $Model. $UseName."_".$code.'/'.$Year.'/'.$Month;
+      $path = 'Data/'.$UseName."_".$code.$Model.'/'.$Year.'/'.$Month;
       echo convertArrayToJson(getDirectories($path)) ;
     } else echo "False";
   }
@@ -147,7 +162,7 @@
       $Month = $_REQUEST['Month'];      
       $Day = $_REQUEST['Day'];      
       
-      $path = $Model.$UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day;
+      $path = 'Data/'.$UseName."_".$code.$Model.'/'.$Year.'/'.$Month.'/'.$Day;
       if (isNameFolder($path)){
         echo convertArrayToJson(getFile($path)) ;
       } else echo "[]"; 
@@ -162,7 +177,7 @@
       $Day = $_REQUEST['Day'];      
       $NameFile = $Day."_".$Month."_".$Year.".txt";      
       
-      $path = $Model. $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day."/".$NameFile;
+      $path = 'Data/'.$UseName."_".$code.$Model.'/'.$Year.'/'.$Month.'/'.$Day."/".$NameFile;
     
       if (isNameFile($path)){
 
@@ -190,7 +205,7 @@
       $Year = $_REQUEST['Year'];
       $Month = $_REQUEST['Month'];      
      
-      $path = $Model.$UseName."_".$code.'/'.$Year.'/'.$Month.'/';
+      $path = 'Data/'.$UseName."_".$code.$Model.'/'.$Year.'/'.$Month.'/';
       downloadZipperFolder($path);
     } else echo "False";
   }
@@ -201,7 +216,7 @@
       $Month = $_REQUEST['Month'];      
       $Day = $_REQUEST['Day'];      
       
-      $path = $Model. $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day.'/'.$Day.'_'.$Month.'_'.$Year.'.txt';
+      $path = 'Data/'.$UseName."_".$code.$Model.'/'.$Year.'/'.$Month.'/'.$Day.'/'.$Day.'_'.$Month.'_'.$Year.'.txt';
       show($path);
       downloadFile($path);
     } else echo "False";
@@ -209,7 +224,7 @@
   
   function getInforAccount(){
     GLOBAL $UseName, $code, $Model;
-    $path = $Model."account.txt";
+    $path = "Data/account.txt";
     if (isNameFile($path)){
       if (strlen(dataFile1($path)) > 5)
       {
@@ -250,7 +265,7 @@
       $Day = $_REQUEST['Day'];      
       $NameFile = $Day."_".$Month."_".$Year.".txt";      
       
-      $path = $Model. $UseName."_".$code.'/'.$Year.'/'.$Month.'/'.$Day."/".$NameFile;
+      $path = 'Data/'.$UseName."_".$code.$Model.'/'.$Year.'/'.$Month.'/'.$Day."/".$NameFile;
     
       if (isNameFile($path)){
 
