@@ -33,7 +33,7 @@
     }
 
     if (isset($_REQUEST['Model'])) {
-			$Model = $_REQUEST['Model'];
+			$Model = '/'.$_REQUEST['Model'];
     }
     
     // Main code

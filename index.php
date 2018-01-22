@@ -16,7 +16,7 @@
   getUse();
 
   if (isset($_REQUEST['Model'])) {
-    $Model = $_GET['Model'];
+    $Model = '/'.$_REQUEST['Model'];
   }
   show($Model);
   // check admin
@@ -104,7 +104,7 @@
         $createlat = $_REQUEST['createlat'];
         $createlong = $_REQUEST['createlong'];        
       }
-      if (isLogin("", $UseName, $code) == false) {
+      if (isLogin("", $createUseName, $createcode) == false) {
         InitInforAccount($createUseName, $createcode, $createlat, $createlong);
       }
       InitData($Model, $createUseName, $createcode);
@@ -114,7 +114,7 @@
   }
   
   function InitInforAccount($createUseName, $createcode, $createlat, $createlong) {
-    $info = "{\"UseName\" : \"".createUseName."\", \"code\": \"".$createcode."\", \"lat\": \"".$createlat."\", \"long\" : \"".$createlong."\"},";
+    $info = "{\"UseName\" : \"".$createUseName."\", \"code\": \"".$createcode."\", \"lat\": \"".$createlat."\", \"long\" : \"".$createlong."\"},";
     $path = "Data/account.txt";
     if (isNameFile($path)){
         writeLine($path,$info);
