@@ -74,7 +74,7 @@
     }
     function formatString(){
         GLOBAL $UseName, $code, $Date, $Time, $Data;
-        $strData="{\"Date\":\"".$Date."\",\"Time\":\"".$Time."\",".$Data.",\"UseName\":\"".$UseName."\",\"code\":\"".$code."\"},";
+        $strData="{\"Date\":\"".$Date."\",\"Time\":\"".$Time."\",".$Data."},";
 				show($strData);
 				return $strData;
     }
