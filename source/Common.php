@@ -33,6 +33,14 @@
     show("Create new file");
   }
 
+  function InitConfig($model, $useName, $code){
+    GLOBAL $createFile, $createFolder, $path;
+    $createFolder= 'Data/'.$useName.'_'.$code.$model;
+    $path = $createFolder.'/config.json';
+    createFolder($createFolder);
+    createFile($path);
+  }
+
   function getPathFile(){
     GLOBAL $path;
     return $path;

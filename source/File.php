@@ -13,6 +13,16 @@
             fclose($myfile);
          }
     }
+    function writeLineMode($nameFile, $mode, $str){
+        if (isNameFile($nameFile))
+         {
+            $myfile = fopen($nameFile, $mode) or die("Unable to open file!");
+            //  fwrite($myfile, $str);
+            fwrite($myfile, $str);
+            fclose($myfile);
+         }
+    }
+
     function createFile($nameFile){
         if (!isNameFile($nameFile))
             $myfile = fopen($nameFile, "w");
@@ -85,4 +95,16 @@
         fclose($file);
         $stringFile = $stringFile.'End';
         return str_replace(',End','', $stringFile );
+    }
+
+    function readFileAll($filename){
+        $file = fopen($filename,"r");
+        $stringFile = '';
+        while (!feof($file)) {
+            $line = '';
+            $line = fgets($file);
+            $stringFile =  $stringFile. $line;
+        }
+        fclose($file);
+        return $stringFile;
     }
